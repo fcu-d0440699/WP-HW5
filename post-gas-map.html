@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>google map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+      }
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+      #legend {
+        font-family: Arial, sans-serif;
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: 3px solid #000;
+      }
+      #legend h3 {
+        margin-top: 0;
+      }
+      #legend img {
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>顯示西屯區的加油站和郵局</h2>
+    <div id="map"></div>
+    <div id="legend"><h3>Legend</h3></div>
+    <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: new google.maps.LatLng(24.178836, 120.634390),
+          mapTypeId: 'terrain'
+
+        });
+
+        var icons = {
+          postoffice: {
+            name: 'postoffice',
+            icon: 'https://i.imgur.com/VrF8ZKv.png'
+          },
+          gas: {
+            name: 'gas',
+            icon: 'https://i.imgur.com/NOh5DzW.png'
+          }
+		  
+        };
+
+        var features = [
+          //郵局
+          {
+            name: "臺中逢甲郵局",
+            position: new google.maps.LatLng(24.175283, 120.649136),
+            type: 'postoffice'
+          }, {
+            name: "台中西屯郵局",
+            position: new google.maps.LatLng(24.176708, 120.637660),
+            type: 'postoffice'
+          }, {
+            name: "台中何厝郵局",
+            position: new google.maps.LatLng(24.164628, 120.654207),
+            type: 'postoffice'
+          }, {
+            name: "台中大隆路郵局",
+            position: new google.maps.LatLng(24.156545, 120.652863),
+            type: 'postoffice'
+          }, {
+            name: "台中福安郵局台中69支局",
+            position: new google.maps.LatLng(24.183415, 120.618609),
+            type: 'postoffice'
+          }, {
+            name: "台中永安郵局",
+            position: new google.maps.LatLng(24.190483, 120.612215),
+            type: 'postoffice'
+          }, {
+            name: "台中工業區郵局台中46支局",
+            position: new google.maps.LatLng(24.169492, 120.606556),
+            type: 'postoffice'
+          }, {
+            name: "東海大學郵局",
+            position: new google.maps.LatLng(24.179047, 120.601644),
+            type: 'postoffice'
+          }, 
+          //加油站
+          {
+            name: "台灣中油恩光中清交流道站",
+            position: new google.maps.LatLng(24.200730,120.656977),
+            type: 'gas'
+          }, {
+            name: "台灣中油",
+            position: new google.maps.LatLng(24.198339,120.642638),
+            type: 'gas'
+          }, {
+            name: "員村加油站",
+            position: new google.maps.LatLng(24.199888,120.655384),
+            type: 'gas'
+          }, {
+            name: "福懋加油站",
+            position: new google.maps.LatLng(24.183727,120.629848),
+            type: 'gas'
+          }, {
+            name: "台灣中油文華站",
+            position: new google.maps.LatLng(24.171492,120.659824),
+            type: 'gas'
+          },{
+            name: "台塑石油環中站",
+            position: new google.maps.LatLng(24.179392,120.634390),
+            type: 'gas'
+          },{
+            name: "台灣中油安祥站",
+            position: new google.maps.LatLng(24.162473,120.628175),
+            type: 'gas'
+          },{
+            name: "台灣中油中清站",
+            position: new google.maps.LatLng(24.202130,120.654418),
+            type: 'gas'
+          },{
+            name: "全國加油站",
+            position: new google.maps.LatLng(24.182372,120.633627),
+            type: 'gas'
+          },{
+            name: "台灣中油(加盟店)-大度山嘟嘟加油站",
+            position: new google.maps.LatLng(24.184305,120.590661),
+            type: 'gas'
+          },{
+            name: "台亞石油",
+            position: new google.maps.LatLng(24.173843,120.659996),
+            type: 'gas'
+          },{
+            name: "北基加油站中港站",
+            position: new google.maps.LatLng(24.161815,120.650515),
+            type: 'gas'
+          },{
+            name: "台灣中油文心站",
+            position: new google.maps.LatLng(24.162817,120.650067),
+            type: 'gas'
+          },{
+            name: "台亞石油",
+            position: new google.maps.LatLng(24.165994,120.618558),
+            type: 'gas'
+          }
+        ];
+        
+
+        
+        features.forEach(function(feature) {
+            var marker = new google.maps.Marker({
+                position: feature.position,
+                icon: icons[feature.type].icon,
+                map: map,
+            });
+            
+            var address=" ";
+            
+            /*geocoder.geocode({'latLng': feature.position}, function(results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    if (results) {
+                        address = results[0];
+                    }
+                } 
+            });*/
+            
+            var contentString = '<div>' +'<h3>'+feature.name+'</h3><p>'+address+'</p>'+ feature.position+'</div>';
+            var infowindow = new google.maps.InfoWindow({
+            content: contentString
+            });
+            
+            //滑鼠移到會跳出infowindow
+            marker.addListener('mouseover', function() {
+                infowindow.open(map, marker);
+            });
+            
+            marker.addListener('mouseout', function() {
+                infowindow.close();
+            });
+            
+        });
+        var legend = document.getElementById('legend');
+        for (var key in icons) {
+          var type = icons[key];
+          var name = type.name;
+          var icon = type.icon;
+          var div = document.createElement('div');
+          div.innerHTML = '<img src="' + icon + '"> ' + name;
+          legend.appendChild(div);
+		}
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6tCT5se3XjVKyyPEI7H-Drf92hOHJXKg&callback=initMap">
+    </script>
+  </body>
+</html>
